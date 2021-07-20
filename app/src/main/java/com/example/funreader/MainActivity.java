@@ -1,5 +1,8 @@
 package com.example.funreader;
 
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +19,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.android.volley.toolbox.JsonArrayRequest;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Dictionary;
+import java.util.List;
 
 import okhttp3.Headers;
 
@@ -37,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView result;
     private TextView define;
     private String myWord;
+    private String soundURL;
+
+    private Context mContext;
+
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doCheck();
+                doCheck2();
             }
         });
 
@@ -64,7 +78,62 @@ public class MainActivity extends AppCompatActivity {
 
         InitPicker();
         getLetters();
+    }
 
+    private void doCheck2(){
+        myWord = pVals[p1.getValue()] + pVals[p2.getValue()] + pVals[p3.getValue()] + pVals[p4.getValue()] + pVals[p5.getValue()];
+        myWord = myWord.replaceAll("\\s+","");
+
+        String completeURL = DICTIONARY_URL + myWord;
+        Log.d("URL", completeURL);
+
+        mContext = getApplicationContext();
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                completeURL,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject item = response.getJSONObject(0);
+                            String theWord = item.getString("word");
+                            Log.d("WORD", theWord);
+
+                            String item2 = response.getJSONObject(0).getJSONArray("phonetics").getJSONObject(0).getString("audio");
+                            String audioURL = item2.toString();
+                            Log.d("Audio", audioURL);
+                            playAudio(audioURL);
+                            result.setText("GREAT JOB!\n" + "You spelled " + myWord);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("ERROR", "FAILURE");
+                    result.setText("OH NO!\n" + myWord + " is not a word.");
+                }
+            }
+        );
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void playAudio(String audioURL) {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try{
+            mediaPlayer.setDataSource(audioURL);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void doCheck() {
@@ -94,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 result.setText("OH NO!\n" + myWord + " is not a word.");
             }
         });
-
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
