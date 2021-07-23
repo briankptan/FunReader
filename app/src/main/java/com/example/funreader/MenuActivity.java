@@ -9,6 +9,9 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class MenuActivity extends AppCompatActivity {
 
     private Button btnAT;
@@ -56,13 +59,25 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void playRiley() {
-        MediaPlayer soundRiley = MediaPlayer.create(this, R.raw.hiriley);
-        soundRiley.start();
+        ArrayList<Integer> soundList = new ArrayList<Integer>();
+        soundList.add(R.raw.hiriley);
+        soundList.add(R.raw.rileyspell);
+
+        Random random = new Random();
+        int rand = random.nextInt(soundList.size());
+        MediaPlayer play = MediaPlayer.create(this, soundList.get(rand));
+        play.start();
     }
 
     private void playElektra() {
-        MediaPlayer soundElektra = MediaPlayer.create(this, R.raw.hielektra);
-        soundElektra.start();
+        ArrayList<Integer> soundList = new ArrayList<Integer>();
+        soundList.add(R.raw.hielektra);
+        soundList.add(R.raw.elektraspell);
+
+        Random random = new Random();
+        int rand = random.nextInt(soundList.size());
+        MediaPlayer play = MediaPlayer.create(this, soundList.get(rand));
+        play.start();
     }
 
     private void activateIN() {

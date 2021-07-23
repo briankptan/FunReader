@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -31,6 +32,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -166,9 +171,29 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(jsonArrayRequest);
     }
 
+    private void woohoo() {
+        ArrayList<Integer> soundList = new ArrayList<Integer>();
+        soundList.add(R.raw.woohoo);
+        soundList.add(R.raw.welldone);
+        soundList.add(R.raw.excellentjob);
+
+        Random random = new Random();
+        int rand = random.nextInt(soundList.size());
+        MediaPlayer play = MediaPlayer.create(this, soundList.get(rand));
+        play.start();
+    }
+
     private void playError() {
-        MediaPlayer error = MediaPlayer.create(this, R.raw.notaword);
-        error.start();
+        ArrayList<Integer> soundList = new ArrayList<Integer>();
+        soundList.add(R.raw.uhhnope);
+        soundList.add(R.raw.notaword);
+        soundList.add(R.raw.uhidontknow);
+        soundList.add(R.raw.wontwork);
+
+        Random random = new Random();
+        int rand = random.nextInt(soundList.size());
+        MediaPlayer play = MediaPlayer.create(this, soundList.get(rand));
+        play.start();
     }
 
     private void playAudio(String audioURL) {
@@ -178,6 +203,8 @@ public class MainActivity extends AppCompatActivity {
             mediaPlayer.setDataSource(audioURL);
             mediaPlayer.prepare();
             mediaPlayer.start();
+            //mediaPlayer.stop();
+            woohoo();
         } catch (IOException e) {
             e.printStackTrace();
         }
