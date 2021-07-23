@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         define.setMovementMethod(new ScrollingMovementMethod());
 
         soundSwitch = findViewById(R.id.swSound);
+        soundSwitch.setChecked(true);
+
         lockSwitch = findViewById(R.id.swLock);
 
         lockSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -173,9 +175,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void woohoo() {
         ArrayList<Integer> soundList = new ArrayList<Integer>();
-        soundList.add(R.raw.woohoo);
-        soundList.add(R.raw.welldone);
-        soundList.add(R.raw.excellentjob);
+//        soundList.add(R.raw.woohoo);
+//        soundList.add(R.raw.wahsoclever);
+//        soundList.add(R.raw.whoagood);
+//        soundList.add(R.raw.nice);
 
         Random random = new Random();
         int rand = random.nextInt(soundList.size());
@@ -186,9 +189,7 @@ public class MainActivity extends AppCompatActivity {
     private void playError() {
         ArrayList<Integer> soundList = new ArrayList<Integer>();
         soundList.add(R.raw.uhhnope);
-        soundList.add(R.raw.notaword);
         soundList.add(R.raw.uhidontknow);
-        soundList.add(R.raw.wontwork);
 
         Random random = new Random();
         int rand = random.nextInt(soundList.size());
@@ -338,8 +339,5 @@ public class MainActivity extends AppCompatActivity {
         p3.setMinValue(0);
         p3.setDisplayedValues(pVals);
         p3.setValue(secondVal);
-
-
-
     }
 }
