@@ -1,12 +1,11 @@
 package com.example.funreader;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -21,30 +20,26 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.appcompat.app.AppCompatActivity;
-import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class FourLetter extends AppCompatActivity {
 
     public static final String DICTIONARY_URL = "https://api.dictionaryapi.dev/api/v2/entries/en_US/";
 
     private NumberPicker p1;
     private NumberPicker p2;
     private NumberPicker p3;
+    private NumberPicker p4;
     private String[] pVals;
 
     private Button check;
@@ -64,11 +59,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Intent menuIntent = getIntent();
-        Bundle extras = menuIntent.getExtras();
-        String myLetters = extras.getString("2Letters");
+        setContentView(R.layout.activity_four_letter);
 
         result = findViewById(R.id.tvResult);
 
@@ -86,10 +77,12 @@ public class MainActivity extends AppCompatActivity {
                 if(isChecked){
                     p2.setEnabled(false);
                     p3.setEnabled(false);
+                    p4.setEnabled(false);
                 }
                 else{
                     p2.setEnabled(true);
                     p3.setEnabled(true);
+                    p4.setEnabled(true);
                 }
             }
         });
@@ -106,16 +99,16 @@ public class MainActivity extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doReset(myLetters);
+                doReset();
             }
         });
 
-        InitPicker(myLetters);
+        InitPicker();
         getLetters();
     }
 
     private void doCheck2(){
-        myWord = pVals[p1.getValue()] + pVals[p2.getValue()] + pVals[p3.getValue()];
+        myWord = pVals[p1.getValue()] + pVals[p2.getValue()] + pVals[p3.getValue()] + pVals[p4.getValue()];
         myWord = myWord.replaceAll("\\s+","");
 
         define.setText("");
@@ -161,15 +154,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 },
                 new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("ERROR", "FAILURE");
-                    if (soundSwitch.isChecked()){
-                        playError();
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR", "FAILURE");
+                        if (soundSwitch.isChecked()){
+                            playError();
+                        }
+                        result.setText("OH NO!\n" + myWord + " is not a word.");
                     }
-                    result.setText("OH NO!\n" + myWord + " is not a word.");
                 }
-            }
         );
         requestQueue.add(jsonArrayRequest);
     }
@@ -216,65 +209,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void doCheck() {
-        myWord = pVals[p1.getValue()] + pVals[p2.getValue()] + pVals[p3.getValue()];
-        myWord = myWord.replaceAll("\\s+","");
-
-        String completeURL = DICTIONARY_URL + myWord;
-
-        Log.d("URL", completeURL);
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, completeURL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        Log.d("RESULT: ", response);
-                        result.setText("GREAT JOB!\n" + myWord + " is a word!");
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("FAILURE", "OOPS");
-                result.setText("OH NO!\n" + myWord + " is not a word.");
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
-    private void doReset(String myLetters) {
+    private void doReset() {
         define.setText("");
         pVals = new String[] {" ", "a", "b", "c", "d", "e", "f", "g", "h",
                 "i", "j", "k", "l", "m", "n", "o", "p",
                 "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
 
-        String firstLetter = myLetters.substring(0,1);
-        String secondLetter = myLetters.substring(1);
-
-        int firstVal = 2, secondVal = 2;
-        for (int i = 0; i < 26; i++){
-            if (pVals[i].equals(firstLetter)){
-                firstVal = i;
-                break;
-            }
-        }
-
-        for (int i = 0; i < 26; i++){
-            if (pVals[i].equals(secondLetter)){
-                secondVal = i;
-                break;
-            }
-        }
-
         p1.setValue(0);
-        p2.setValue(firstVal);
-        p3.setValue(secondVal);
-
+        p2.setValue(0);
+        p3.setValue(0);
+        p4.setValue(0);
         result.setText("");
     }
 
@@ -304,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void InitPicker(String myLetters){
+    private void InitPicker(){
         pVals = new String[] {" ", "a", "b", "c", "d", "e", "f", "g", "h",
                 "i", "j", "k", "l", "m", "n", "o", "p",
                 "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
@@ -312,24 +256,7 @@ public class MainActivity extends AppCompatActivity {
         p1 = findViewById(R.id.np1);
         p2 = findViewById(R.id.np2);
         p3 = findViewById(R.id.np3);
-
-        String firstLetter = myLetters.substring(0,1);
-        String secondLetter = myLetters.substring(1);
-
-        int firstVal = 2, secondVal = 2;
-        for (int i = 0; i < 26; i++){
-            if (pVals[i].equals(firstLetter)){
-                firstVal = i;
-                break;
-            }
-        }
-
-        for (int i = 0; i < 26; i++){
-            if (pVals[i].equals(secondLetter)){
-                secondVal = i;
-                break;
-            }
-        }
+        p4 = findViewById(R.id.np4);
 
         p1.setMaxValue(26);
         p1.setMinValue(0);
@@ -338,11 +265,15 @@ public class MainActivity extends AppCompatActivity {
         p2.setMaxValue(26);
         p2.setMinValue(0);
         p2.setDisplayedValues(pVals);
-        p2.setValue(firstVal);
+
 
         p3.setMaxValue(26);
         p3.setMinValue(0);
         p3.setDisplayedValues(pVals);
-        p3.setValue(secondVal);
+
+        p4.setMaxValue(26);
+        p4.setMinValue(0);
+        p4.setDisplayedValues(pVals);
+
     }
 }

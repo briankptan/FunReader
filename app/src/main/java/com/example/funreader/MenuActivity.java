@@ -18,6 +18,7 @@ public class MenuActivity extends AppCompatActivity {
     private Button btnIN;
     private Button elektra;
     private Button riley;
+    private Button btnFour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MenuActivity extends AppCompatActivity {
         btnIN = findViewById(R.id.btnIn);
         elektra = findViewById(R.id.btnElektra);
         riley = findViewById(R.id.btnRiley);
+        btnFour = findViewById(R.id.btn4Letter);
 
         elektra.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +58,16 @@ public class MenuActivity extends AppCompatActivity {
                 activateIN();
             }
         });
+
+        btnFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activateFour();
+            }
+        });
     }
+
+
 
     private void playRiley() {
         ArrayList<Integer> soundList = new ArrayList<Integer>();
@@ -89,6 +100,11 @@ public class MenuActivity extends AppCompatActivity {
     private void activateAT() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("2Letters", "at");
+        startActivity(intent);
+    }
+
+    private void activateFour() {
+        Intent intent = new Intent(this, FourLetter.class);
         startActivity(intent);
     }
 }

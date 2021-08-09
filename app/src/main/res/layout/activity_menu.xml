@@ -47,6 +47,16 @@
         app:layout_constraintEnd_toStartOf="@+id/btnRiley"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnIn"
-        app:layout_constraintVertical_bias="0.355" />
+        app:layout_constraintTop_toBottomOf="@+id/btn4Letter"
+        app:layout_constraintVertical_bias="0.23" />
+
+    <Button
+        android:id="@+id/btn4Letter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="4-letter"
+        app:layout_constraintEnd_toEndOf="@+id/btnIn"
+        app:layout_constraintStart_toStartOf="@+id/btnIn"
+        app:layout_constraintTop_toBottomOf="@+id/btnIn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

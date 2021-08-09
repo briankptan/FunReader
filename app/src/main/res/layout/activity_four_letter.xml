@@ -4,25 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".FourLetter">
+
+
+    <NumberPicker
+        android:id="@+id/np4"
+        android:layout_width="75dp"
+        android:layout_height="230dp"
+        android:layout_marginEnd="4dp"
+        android:theme="@style/Theme.numberpicker"
+        app:layout_constraintBottom_toBottomOf="@+id/np3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/np1" />
 
     <NumberPicker
         android:id="@+id/np1"
         android:layout_width="75dp"
         android:layout_height="230dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="132dp"
         android:theme="@style/Theme.numberpicker"
-        app:layout_constraintStart_toStartOf="@+id/btnCheck"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <NumberPicker
         android:id="@+id/np2"
         android:layout_width="75dp"
         android:layout_height="230dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="20dp"
         android:theme="@style/Theme.numberpicker"
-        app:layout_constraintEnd_toStartOf="@+id/np3"
         app:layout_constraintStart_toEndOf="@+id/np1"
         app:layout_constraintTop_toTopOf="@+id/np1" />
 
@@ -30,11 +40,10 @@
         android:id="@+id/np3"
         android:layout_width="75dp"
         android:layout_height="230dp"
+        android:layout_marginEnd="20dp"
         android:theme="@style/Theme.numberpicker"
-        app:layout_constraintBottom_toBottomOf="@+id/np2"
-        app:layout_constraintEnd_toEndOf="@+id/btnCheck"
-        app:layout_constraintTop_toTopOf="@+id/np2"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toStartOf="@+id/np4"
+        app:layout_constraintTop_toTopOf="@+id/np2" />
 
     <Button
         android:id="@+id/btnCheck"
@@ -107,5 +116,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnReset"
         app:layout_constraintVertical_bias="0.523" />
-</androidx.constraintlayout.widget.ConstraintLayout>
 
+</androidx.constraintlayout.widget.ConstraintLayout>
