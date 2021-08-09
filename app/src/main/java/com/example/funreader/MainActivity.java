@@ -3,6 +3,7 @@ package com.example.funreader;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("WORD", theWord);
 
                             String item2 = response.getJSONObject(0).getJSONArray("phonetics").getJSONObject(0).getString("audio");
-                            String audioURL = item2.toString();
+                            String audioURL = "https:" + item2.toString();
                             Log.d("Audio", audioURL);
                             if (soundSwitch.isChecked()){
                                 playAudio(audioURL);
@@ -175,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void woohoo() {
         ArrayList<Integer> soundList = new ArrayList<Integer>();
-//        soundList.add(R.raw.woohoo);
-//        soundList.add(R.raw.wahsoclever);
-//        soundList.add(R.raw.whoagood);
-//        soundList.add(R.raw.nice);
+        soundList.add(R.raw.woohoo);
+        soundList.add(R.raw.wahsoclever);
+        soundList.add(R.raw.whoagood);
+        soundList.add(R.raw.nice);
 
         Random random = new Random();
         int rand = random.nextInt(soundList.size());
@@ -199,7 +200,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void playAudio(String audioURL) {
         mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setAudioAttributes(
+                new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build());
         try{
             mediaPlayer.setDataSource(audioURL);
             mediaPlayer.prepare();
